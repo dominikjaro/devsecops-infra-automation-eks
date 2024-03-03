@@ -1,9 +1,20 @@
 stages:
+- init
 - build
+- deploy
 
 image:
-  name: amazon/aws-cli:latest
+  name: hashicorp/terraform:1.7
   entrypoint: [""]
+
+init:
+  stage: init
+  script:
+    - terraform init
+  artifacts:
+    paths:
+      - .terraform/
+      - .terraform.lock.hcl
 
 build:
   id_tokens:
@@ -11,6 +22,11 @@ build:
       aud: https://gitlab.com
   stage: build
   before_script:
+  # install aws cli
+  - apk --no-cache add curl python3 py3-pip
+  - pip3 install --no-cache-dir awscli --break-system-packages
+
+  # establish connection with AWS to get access credentials
   - >
     export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
     $(aws sts assume-role-with-web-identity
@@ -22,4 +38,32 @@ build:
     --output text))
   - aws sts get-caller-identity
   script:
-  - echo "connected to AWS from GitLab and retrieved credentials"
+  - terraform plan -out "planfile"
+  artifacts:
+    paths:
+      - planfile
+
+deploy:
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.com
+  stage: deploy
+  before_script:
+  # install aws cli
+  - apk --no-cache add curl python3 py3-pip
+  - pip3 install --no-cache-dir awscli --break-system-packages
+
+  # establish connection with AWS to get access credentials
+  - >
+    export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
+    $(aws sts assume-role-with-web-identity
+    --role-arn ${ROLE_ARN}
+    --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
+    --web-identity-token ${GITLAB_OIDC_TOKEN}
+    --duration-seconds 3600
+    --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
+    --output text))
+  - aws sts get-caller-identity
+  script:
+  - terraform apply -input=false "planfile"
+  # when: manual
