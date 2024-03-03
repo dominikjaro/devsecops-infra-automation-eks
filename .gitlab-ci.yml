@@ -2,6 +2,7 @@ stages:
 - init
 - build
 - deploy
+- destroy
 
 image:
   name: hashicorp/terraform:1.7
