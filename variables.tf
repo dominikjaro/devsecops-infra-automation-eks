@@ -29,6 +29,6 @@ variable tags {
 variable user_for_admin_role {}
 variable user_for_dev_role {}
 
-variable gitops_url {}
-variable gitops_username {}
-variable gitops_password {}
+variable gitops_url { default = "test" }
+variable gitops_username { default = "test" }
+variable gitops_password { default = "test" }

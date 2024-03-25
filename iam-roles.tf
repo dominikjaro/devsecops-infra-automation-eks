@@ -77,3 +77,40 @@ resource "aws_iam_role" "external-developer" {
     })
   }
 }
+
+# role for AWS secret manager access
+
+resource "aws_iam_role" "external-secrets-role" {
+  name = "externalsecrets_sa_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = ["sts:AssumeRoleWithWebIdentity"]
+        Effect = "Allow"
+        Sid    = ""
+        // all services within EKS can assume this role
+        Principal = {
+          Federated = module.eks.oidc_provider_arn
+        }
+      },
+    ]
+  })
+
+  inline_policy {
+    name = "externalsecrets_sa_policy"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+	        // allow all access to the secrets manager. Make this READ-ONLY
+          Action   = ["secretsmanager:*"]
+          Effect   = "Allow"
+          Resource = "*"
+        },
+      ]
+    })
+  }
+}
