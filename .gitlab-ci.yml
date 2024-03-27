@@ -86,8 +86,7 @@ deploy:
     --output text))
   - aws sts get-caller-identity
   script:
-  - terraform destroy -auto-approve
-  # - terraform apply -input=false "planfile"
+  - terraform apply -input=false "planfile"
   
   # when: manual
 
@@ -115,6 +114,7 @@ deploy_argocd:
   - export KUBE_CONFIG_PATH=/root/.kube/config
   script:
   - kubectl apply -f online-boutique-argo-app.yaml
+  - kubectl apply -f platform-argo-app.yaml
 
 cleanup:
   id_tokens:
