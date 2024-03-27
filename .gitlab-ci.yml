@@ -86,6 +86,7 @@ deploy:
     --output text))
   - aws sts get-caller-identity
   script:
+  - terraform refresh
   - terraform apply -input=false "planfile"
   # when: manual
 
