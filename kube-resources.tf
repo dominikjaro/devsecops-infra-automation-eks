@@ -9,76 +9,38 @@ provider "kubernetes" {
   }
 }
 
-resource "kubernetes_namespace" "online-boutique" {
+ resource "kubernetes_namespace" "online-boutique" {
   metadata {
     name = "online-boutique"
   }
 }
 
-resource "kubernetes_role" "namespace-viewer" {
+resource "kubernetes_cluster_role" "restricted_admin" {
   metadata {
-    name      = "namespace-viewer"
-    namespace = "online-boutique"
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["pods", "services", "secrets", "configmap", "persistentvolumes"]
-    verbs      = ["get", "list", "watch", "describe"]
-  }
-
-  rule {
-    api_groups = ["apps"]
-    resources  = ["deployments", "daemonsets", "statefulsets"]
-    verbs      = ["get", "list", "watch", "describe"]
-  }
-}
-
-resource "kubernetes_role_binding" "namespace-viewer" {
-  metadata {
-    name      = "namespace-viewer"
-    namespace = "online-boutique"
-  }
-
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "Role"
-    name      = "namespace-viewer"
-  }
-
-  subject {
-    kind      = "User"
-    name      = "developer"
-    api_group = "rbac.authorization.k8s.io"
-  }
-}
-
-resource "kubernetes_cluster_role" "cluster_viewer" {
-  metadata {
-    name = "cluster-viewer"
+    name = "restricted-admin"
   }
 
   rule {
     api_groups = [""]
     resources  = ["*"]
-    verbs      = ["get", "list", "watch", "describe"]
+    verbs      = ["get", "list", "watch"]
   }
 }
 
-resource "kubernetes_cluster_role_binding" "cluster_viewer" {
+resource "kubernetes_cluster_role_binding" "restricted_admin_binding" {
   metadata {
-    name = "cluster-viewer"
+    name = "restricted-admin-binding"
   }
 
   role_ref {
     kind      = "ClusterRole"
-    name      = "cluster-viewer"
+    name      = "restricted-admin"
     api_group = "rbac.authorization.k8s.io"
   }
 
   subject {
-    kind      = "User"
-    name      = "admin"
+    kind      = "Group"
+    name      = "restricted-admins"
     api_group = "rbac.authorization.k8s.io"
   }
 }
