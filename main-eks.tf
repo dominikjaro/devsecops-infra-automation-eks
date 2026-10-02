@@ -1,5 +1,5 @@
 provider "aws" {
-  region = var.aws_region
+  region     = var.aws_region
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
 }
@@ -40,25 +40,25 @@ module "eks" {
   cluster_name                   = var.name
   cluster_version                = var.k8s_version
   cluster_endpoint_public_access = true
-  
+
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
   create_cluster_security_group = false
   create_node_security_group    = false
-  
+
   cluster_addons = {
     kube-proxy = {}
     vpc-cni    = {}
-    coredns = {}
+    coredns    = {}
   }
-  
+
   eks_managed_node_groups = {
     initial = {
       instance_types = ["t3.micro"]
-      min_size     = 2
-      max_size     = 20
-      desired_size = 4
+      min_size       = 2
+      max_size       = 20
+      desired_size   = 4
     }
   }
 
