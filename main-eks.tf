@@ -9,7 +9,7 @@ data "aws_availability_zones" "azs" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = var.name
   cidr = var.vpc_cidr_block
@@ -33,24 +33,31 @@ module "vpc" {
 }
 
 # EKS Cluster
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.16"
+  version = "~> 21.1"
 
-  cluster_name                   = var.name
-  cluster_version                = var.k8s_version
-  cluster_endpoint_public_access = true
+  name                                     = var.name
+  kubernetes_version                       = var.k8s_version
+  endpoint_public_access                   = true
+  enable_cluster_creator_admin_permissions = true
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  create_cluster_security_group = false
-  create_node_security_group    = false
+  create_security_group      = false
+  create_node_security_group = false
 
-  cluster_addons = {
+  addons = {
     kube-proxy = {}
-    vpc-cni    = {}
-    coredns    = {}
+    vpc-cni = {
+      before_compute = true
+    }
+    eks-pod-identity-agent = {
+      before_compute = true
+    }
+    coredns = {}
   }
 
   eks_managed_node_groups = {
@@ -63,4 +70,26 @@ module "eks" {
   }
 
   tags = var.tags
+}
+resource "aws_eks_access_entry" "admin_entry" {
+  cluster_name      = module.eks.cluster_name
+  principal_arn     = aws_iam_role.external-admin.arn
+  type              = "STANDARD"
+  kubernetes_groups = ["restricted-admins"]
+}
+
+resource "aws_eks_access_entry" "dev_entry" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = aws_iam_role.external-developer.arn
+  type          = "STANDARD"
+}
+resource "aws_eks_access_policy_association" "dev_policy" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = aws_eks_access_entry.dev_entry.principal_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
+
+  access_scope {
+    namespaces = ["online-boutique"]
+    type       = "namespace"
+  }
 }

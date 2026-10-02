@@ -2,8 +2,15 @@ variable "aws_region" {
   default = "eu-central-2"
 }
 
-variable "aws_access_key_id" {}
-variable "aws_secret_access_key" {}
+variable "aws_access_key_id" {
+  type = string
+}
+variable "aws_secret_access_key" {
+  type = string
+}
+
+variable "user_for_admin_role" {}
+variable "user_for_dev_role" {}
 
 variable "name" {
   default = "myapp-eks"
