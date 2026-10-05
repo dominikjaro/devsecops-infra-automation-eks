@@ -1,12 +1,13 @@
 variable "aws_region" {
-  default = "eu-central-2"
+  default = "eu-west-2"
 }
-
 variable "aws_access_key_id" {
-  type = string
+  type      = string
+  sensitive = true
 }
 variable "aws_secret_access_key" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "user_for_admin_role" {}

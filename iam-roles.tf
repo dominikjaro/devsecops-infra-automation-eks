@@ -1,4 +1,3 @@
-
 resource "aws_iam_role" "external-admin" {
   name = "external-admin"
 

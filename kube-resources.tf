@@ -8,7 +8,6 @@ provider "kubernetes" {
     args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
   }
 }
-
 resource "kubernetes_namespace" "online-boutique" {
   metadata {
     name = "online-boutique"
