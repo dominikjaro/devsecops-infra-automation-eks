@@ -13,6 +13,41 @@ resource "kubernetes_namespace" "online-boutique" {
     name = "online-boutique"
   }
 }
+resource "kubernetes_role" "namespace-viewer" {
+  metadata {
+    name      = "namespace-viewer"
+    namespace = "online-boutique"
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods", "services", "secrets", "configmap", "persistentvolumes"]
+    verbs      = ["get", "list", "watch", "describe"]
+  }
+
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments", "daemonsets", "statefulsets"]
+    verbs      = ["get", "list", "watch", "describe"]
+  }
+}
+
+resource "kubernetes_role_binding" "namespace-viewer" {
+  metadata {
+    name      = "namespace-viewer"
+    namespace = "online-boutique"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = "namespace-viewer"
+  }
+  subject {
+    kind      = "User"
+    name      = "developer"
+    api_group = "rbac.authorization.k8s.io"
+  }
+}
 
 resource "kubernetes_cluster_role" "restricted_admin" {
   metadata {
