@@ -14,7 +14,7 @@ variable "user_for_admin_role" {}
 variable "user_for_dev_role" {}
 
 variable "name" {
-  default = "myapp-eks"
+  default = "myapp-eks-dev"
 }
 
 variable "k8s_version" {

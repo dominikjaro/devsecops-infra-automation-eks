@@ -8,12 +8,12 @@ provider "kubernetes" {
     args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.aws_region]
   }
 }
-resource "kubernetes_namespace" "online-boutique" {
+resource "kubernetes_namespace_v1" "online-boutique" {
   metadata {
     name = "online-boutique"
   }
 }
-resource "kubernetes_role" "namespace-viewer" {
+resource "kubernetes_role_v1" "namespace-viewer" {
   metadata {
     name      = "namespace-viewer"
     namespace = "online-boutique"
@@ -32,7 +32,7 @@ resource "kubernetes_role" "namespace-viewer" {
   }
 }
 
-resource "kubernetes_role_binding" "namespace-viewer" {
+resource "kubernetes_role_binding_v1" "namespace-viewer" {
   metadata {
     name      = "namespace-viewer"
     namespace = "online-boutique"
@@ -49,7 +49,7 @@ resource "kubernetes_role_binding" "namespace-viewer" {
   }
 }
 
-resource "kubernetes_cluster_role" "restricted_admin" {
+resource "kubernetes_cluster_role_v1" "restricted_admin" {
   metadata {
     name = "restricted-admin"
   }
@@ -61,7 +61,7 @@ resource "kubernetes_cluster_role" "restricted_admin" {
   }
 }
 
-resource "kubernetes_cluster_role_binding" "restricted_admin_binding" {
+resource "kubernetes_cluster_role_binding_v1" "restricted_admin_binding" {
   metadata {
     name = "restricted-admin-binding"
   }
