@@ -58,10 +58,10 @@ build:
       --output text))
     - aws sts get-caller-identity
   script:
-    - terraform plan
-  # artifacts:
-  #   paths:
-  #     - planfile
+    - terraform plan -out "planfile"
+  artifacts:
+    paths:
+      - planfile
 
 deploy:
   id_tokens:

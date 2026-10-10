@@ -1,5 +1,5 @@
 variable "aws_region" {
-  default = "eu-central-2"
+  default = "eu-west-2"
 }
 variable "name" {
   default = "myapp-eks"
