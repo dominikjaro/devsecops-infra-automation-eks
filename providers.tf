@@ -3,7 +3,7 @@ terraform {
   backend "s3" {
     bucket = "infra-bucket-04"
     key    = "infra/terraform.tfstate"
-    region = var.aws_region
+    region = "eu-west-2"
   }
   required_providers {
     aws = {
