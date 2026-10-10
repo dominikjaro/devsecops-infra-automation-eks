@@ -24,3 +24,6 @@ variable "tags" {
     App = "eks-devsecops"
   }
 }
+
+variable "user_for_admin_role" {}
+variable "user_for_dev_role" {}

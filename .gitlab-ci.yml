@@ -5,7 +5,7 @@ stages:
   - cleanup
 
 image:
-  name: hashicorp/terraform:latest
+  name: hashicorp/terraform:1.7
   entrypoint: [""]
 
 init:
@@ -110,5 +110,5 @@ cleanup:
       --output text))
     - aws sts get-caller-identity
   script:
-    - terraform desotry -auto-approve
+    - terraform destroy -auto-approve
   when: manual
