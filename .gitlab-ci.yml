@@ -12,8 +12,8 @@ build:
   stage: build
   before_script:
     # Install aws cli
-    - apk --no-cache add curl python3 py3-pip
-    - pip3 install --no-cache-dir awscli --break-system-packages
+    #- apk --no-cache add curl python3 py3-pip
+    #- pip3 install --no-cache-dir awscli --break-system-packages
 
     # establish connection with AWS to get access credentials
     - >
