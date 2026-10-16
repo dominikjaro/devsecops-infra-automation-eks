@@ -90,3 +90,55 @@ resource "aws_eks_access_policy_association" "dev_policy" {
     type       = "namespace"
   }
 }
+
+module "eks_blueprints_addons" {
+  source  = "aws-ia/eks-blueprints-addons/aws"
+  version = "~> 1.0"
+
+  cluster_name      = module.eks.cluster_name
+  cluster_endpoint  = module.eks.cluster_endpoint
+  cluster_version   = module.eks.cluster_version
+  oidc_provider_arn = module.eks.oidc_provider_arn
+
+  enable_aws_load_balancer_controller = true
+  enable_metrics_server               = true
+  enable_cluster_autoscaler           = true
+  cluster_autoscaler = {
+    set = [
+      {
+        name  = "extraArgs.scale-down-unneeded-time"
+        value = "1m"
+      },
+      {
+        name  = "extraArgs.skip-nodes-with-local-storage"
+        value = false
+      },
+      {
+        name  = "extraArgs.skip-nodes-with-system-pods"
+        value = false
+      }
+    ]
+  }
+
+  enable_argocd        = true
+  enable_argo_rollouts = true
+
+  argocd = {
+    values = [
+      yamlencode({
+        server = {
+          service = {
+            annotations = {
+              "service.beta.kubernetes.io/aws-load-balancer-name"            = "argocd"
+              "service.beta.kubernetes.io/aws-load-balancer-type"            = "external"
+              "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type" = "ip"
+              "service.beta.kubernetes.io/aws-load-balancer-scheme"          = "internet-facing"
+            },
+            type = "LoadBalancer"
+          }
+        }
+      })
+    ]
+  }
+
+}
