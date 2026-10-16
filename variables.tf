@@ -2,7 +2,7 @@ variable "aws_region" {
   default = "eu-west-2"
 }
 variable "name" {
-  default = "myapp-eks"
+  default = "myapp-eks-v3"
 }
 
 variable "k8s_version" {
