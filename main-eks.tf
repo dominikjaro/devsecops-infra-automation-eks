@@ -120,25 +120,25 @@ module "eks_blueprints_addons" {
     ]
   }
 
-  enable_argocd        = true
-  enable_argo_rollouts = true
+  # enable_argocd        = true
+  # enable_argo_rollouts = true
 
-  argocd = {
-    values = [
-      yamlencode({
-        server = {
-          service = {
-            annotations = {
-              "service.beta.kubernetes.io/aws-load-balancer-name"            = "argocd"
-              "service.beta.kubernetes.io/aws-load-balancer-type"            = "external"
-              "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type" = "ip"
-              "service.beta.kubernetes.io/aws-load-balancer-scheme"          = "internet-facing"
-            },
-            type = "LoadBalancer"
-          }
-        }
-      })
-    ]
-  }
+  # argocd = {
+  #   values = [
+  #     yamlencode({
+  #       server = {
+  #         service = {
+  #           annotations = {
+  #             "service.beta.kubernetes.io/aws-load-balancer-name"            = "argocd"
+  #             "service.beta.kubernetes.io/aws-load-balancer-type"            = "external"
+  #             "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type" = "ip"
+  #             "service.beta.kubernetes.io/aws-load-balancer-scheme"          = "internet-facing"
+  #           },
+  #           type = "LoadBalancer"
+  #         }
+  #       }
+  #     })
+  #   ]
+  # }
 
 }
