@@ -22,3 +22,30 @@ resource "aws_iam_role" "external-developer" {
     }]
   })
 }
+resource "aws_iam_role_policy" "external_admin_eks_describe" {
+  name = "eks-describe-access"
+  role = aws_iam_role.external-admin.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action   = ["eks:DescribeCluster", "eks:ListClusters"]
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy" "external_developer_eks_describe" {
+  name = "eks-describe-access"
+  role = aws_iam_role.external-developer.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action   = ["eks:DescribeCluster", "eks:ListClusters"]
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+  })
+}
