@@ -56,7 +56,6 @@ module "eks" {
     }
     coredns = {}
   }
-
   eks_managed_node_groups = {
     initial = {
       instance_types = ["t3.medium"]
