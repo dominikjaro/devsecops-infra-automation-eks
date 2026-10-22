@@ -31,3 +31,7 @@ variable "user_for_admin_role" {
 variable "user_for_dev_role" {
   default = "arn:aws:iam::387056640672:user/k8s-developer"
 }
+
+variable "gitops_url" {}
+variable "gitops_username" {}
+variable "gitops_password" {}
