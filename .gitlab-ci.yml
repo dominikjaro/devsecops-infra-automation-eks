@@ -163,5 +163,6 @@ cleanup:
       --output text))
     - aws sts get-caller-identity
   script:
+    - terraform init --upgrade
     - terraform destroy -auto-approve
   when: manual
