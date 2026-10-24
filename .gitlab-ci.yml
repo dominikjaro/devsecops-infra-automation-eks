@@ -138,11 +138,10 @@ cleanup_argocd:
     - aws eks update-kubeconfig --region ${TF_VAR_aws_region} --name ${TF_VAR_name}
     - export KUBE_CONFIG_PATH=/root/.kube/config
   script:
-    # 1. Delete the Argo CD application (cascades and deletes all pods/services)
     - kubectl delete -f online-boutique-argo-app.yaml --ignore-not-found=true --timeout=90s
-    # 2. Explicitly remove any LoadBalancer service
-    - kubectl delete svc frontend-external -n default --ignore-not-found=true --timeout=60s
-    # 3. Allow AWS 30 seconds to deregister and delete the ELB from your VPC
+    - kubectl delete -f platform-argo-app.yaml --ignore-not-found=true --timeout=90s
+    - kubectl delete ingress --all --all-namespaces --timeout=90s
+    - kubectl delete svc frontend-external -n online-boutique --ignore-not-found=true
     - echo "Waiting for AWS to finish deleting Load Balancers..."
     - sleep 30
   when: manual
