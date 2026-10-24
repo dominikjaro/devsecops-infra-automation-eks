@@ -83,6 +83,11 @@ resource "kubernetes_cluster_role_v1" "restricted_admin" {
     resources  = ["pods/portforward"]
     verbs      = ["get", "list", "create"]
   }
+  rule {
+    api_groups = ["apiextensions.k8s.io"]
+    resources  = ["customresourcedefinitions"]
+    verbs      = ["get", "list", "describe"]
+  }
 }
 
 resource "kubernetes_cluster_role_binding_v1" "restricted_admin_binding" {
