@@ -1,6 +1,8 @@
-#  DevSecOps AWS EKS Infrastructure Automation
+#  DevSecOps AWS Infrastructure Automation
 
-Infrastructure-as-Code (IaC) repository provisioning a secure, AWS EKS cluster, IAM and other resources. 
+Infrastructure-as-Code (IaC) repository provisioning a secure, VPC and AWS EKS cluster.
+We are using public modules to apply the resources. To simplyfy the setup, don't have sub-modules.
+We apply the resources via a pipeline using GitLab CI - so the variable values are defined in GitLab.
 
 ## Repository Structure
 
