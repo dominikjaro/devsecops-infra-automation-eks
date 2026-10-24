@@ -27,6 +27,12 @@ We are adding Kubernetes provider and additional K8s and AWS resources. e.g.
 
 ## Branch: feature/2-iac-pipeline-dom
 
-Adding the pipeline for IaC deployment and automation.
-We initialize terraform and build-plan and apply. There is a cleanup step that can be run manually.
-We are using a terraform image, however had to install aws cli on it.
+* Adding the pipeline for IaC deployment and automation.
+* We initialize terraform and build-plan and apply. There is a cleanup step that can be run manually.
+* The terraform plan file is saved as an artifact, so it can be applied later.
+* We are using a terraform image, however had to install aws cli on it for authentication.
+* In AWS under Access Management I created an Identity Provider for GitLab OIDC, then a Web Identity role, which has the Trust relationship with the    Identity Provider, allowing GitLab to assume the role and interact with AWS resources securely. For more info see -> [14_secure_iac_pipeline_for_eks_provisioning](https://gitlab.com/dominikjaro_devsecops_bootcamp/notes_overview/-/blob/aa97d58f89f23e419c84204eb2d4e33645936bc7/chapters_notes/14_secure_iac_pipeline_for_eks_provisioning.md)
+
+## Branch: feature/3-eks-blueprints-dom
+
+Helm provider and add_ons....
