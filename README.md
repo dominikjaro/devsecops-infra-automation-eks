@@ -35,4 +35,30 @@ We are adding Kubernetes provider and additional K8s and AWS resources. e.g.
 
 ## Branch: feature/3-eks-blueprints-dom
 
-Helm provider and add_ons....
+* Adding Helm provider and add_ons for , like, aws_load_balancer_controller, metrics-server, cluster_autoscaler.
+
+## Branch: feature/4-argocd-gitops-dom
+
+* Adding ArgoCD for GitOps management using helm charts.
+* Adding ArgoCD secret for authentication in the cluster -- if I port-forward to the argocd-server pod I can use the secret to access the UI.
+* I configure `gitops_url, gitops_username, gitops_password` for ArgoCD access -- the variables come from GitLab.
+* In the `argo-cd.yaml` I set the source repoURL, path and other policies.
+* The app will sync automatically with the repo.
+* Adding another `deploy_argocd` step in the CD pipeline for updates (I use an image with awscli and kubectl on it).
+* For more info -> [16_application_release_pipeline_with_argocd](https://gitlab.com/dominikjaro_devsecops_bootcamp/notes_overview/-/blob/aa97d58f89f23e419c84204eb2d4e33645936bc7/chapters_notes/16_application_release_pipeline_with_argocd.md)
+
+## Branch: feature/5-policy-as-code-dom
+
+* Adding the gatekeeper helm chart for policy enforcement. (in the repo: [online-boutique-gitops](https://gitlab.com/dominikjaro_devsecops_bootcamp/online-boutique-gitops) you can find the `contrainttemplate` and the `constraint`) for enforcing policies.
+* To see the CRDs, I had to add another RBAC role:
+  
+```yaml
+rule {
+    api_groups = ["apiextensions.k8s.io"]
+    resources  = ["customresourcedefinitions"]
+    verbs      = ["get", "list", "describe"]
+  }
+```
+* In the file [platform-argo-app.yaml](https://gitlab.com/dominikjaro_devsecops_bootcamp/devsecops-infra-automation-eks/-/blob/feature/5-policy-as-code-dom/platform-argo-app.yaml?ref_type=heads) I define the path to the gitops repo.
+
+## Branch: feature/6-
